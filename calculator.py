@@ -63,18 +63,19 @@ if st.button("Predict Carbon Footprint"):
     st.write(f"Model Training Time: {training_time:.4f} seconds")
     st.write(f"CPU Usage During Training: {cpu_usage:.2f}%")
 
-# Visualization: Heatmap for correlation
-st.subheader("Correlation Heatmap")
-fig, ax = plt.subplots(figsize=(6, 4))
-sns.heatmap(df.corr(), annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5, ax=ax)
-st.pyplot(fig)
+    # Dynamic Heatmap
+    st.subheader("Correlation Heatmap")
+    df_dynamic = df.copy()
+    df_dynamic.loc[len(df_dynamic)] = [transport, diet, waste, prediction[0]]
+    fig, ax = plt.subplots(figsize=(6, 4))
+    sns.heatmap(df_dynamic.corr(), annot=True, cmap='coolwarm', fmt='.2f', linewidths=0.5, ax=ax)
+    st.pyplot(fig)
 
-# Visualization: Pie Chart of Average Emissions
-st.subheader("Average Contribution of Different Emissions")
-average_emissions = df.mean()
-labels = ["Transport", "Diet", "Waste"]
-sizes = [average_emissions["transport_emissions"], average_emissions["diet_emissions"], average_emissions["waste_emissions"]]
-colors = ['red', 'blue', 'green']
-fig2, ax2 = plt.subplots()
-ax2.pie(sizes, labels=labels, autopct='%1.1f%%', colors=colors, startangle=140, shadow=True)
-st.pyplot(fig2)
+    # Dynamic Pie Chart
+    st.subheader("Contribution of Different Emissions")
+    sizes = [transport, diet, waste]
+    labels = ["Transport", "Diet", "Waste"]
+    colors = ['red', 'blue', 'green']
+    fig2, ax2 = plt.subplots()
+    ax2.pie(sizes, labels=labels, autopct='%1.1f%%', colors=colors, startangle=140, shadow=True)
+    st.pyplot(fig2)
